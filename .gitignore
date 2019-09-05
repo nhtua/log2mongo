@@ -2,3 +2,4 @@
 .venv
 Pipfile.lock
 *.log
+__pycache__
