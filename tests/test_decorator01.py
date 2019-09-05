@@ -53,8 +53,8 @@ class TestDecorator01(unittest.TestCase):
         assert log['output']['pathname']  == __file__, 'log2mongo should keep the right path of running file'
         assert log['output']['message']   == 'some message!', 'log2mongo should keep the right Log message'
         assert log['input']['method']     == 'testee', 'log2mongo should keep right running method name'
-        assert log['input']['args']       == ['some message!'], 'log2mongo should keep the right input args'
-        assert log['input']['kwargs']     == {} , 'log2mongo should keep the right input kwargs'
+        assert log['input']['args']       == repr(('some message!',)), 'log2mongo should keep the right input args'
+        assert log['input']['kwargs']     == repr({}) , 'log2mongo should keep the right input kwargs'
 
 if __name__ == '__main__':
     unittest.main()

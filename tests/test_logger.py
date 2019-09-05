@@ -29,7 +29,7 @@ class TestLogger(unittest.TestCase):
             logger.error(INP[3])
             logger.critical(INP[4])
 
-        assert EXP[0] in str(log)
+        assert all([text in str(log) for text in EXP])
 
 
 
