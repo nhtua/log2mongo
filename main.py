@@ -13,6 +13,7 @@ def speak(phrase=""):
 @log2mongo
 def sing(song=""):
     log.critical(f'I\'m singing "{song}"')
+    log.critical(f'lala la lala')
     return song
 
 
