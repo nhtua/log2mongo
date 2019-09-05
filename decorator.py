@@ -5,12 +5,13 @@ import json
 from mongo import db
 from config import MONGO_COLLECTION
 
-def convert_json(obj, default={}):
+
+def convert_json(obj, default: 'Anything can repr to string'):
     try:
-        json_args = json.dumps(obj)
+        json_args = repr(obj)
     except TypeError as e:
-        json_args = json.dumps(default)
-    return json.loads(json_args)
+        json_args = repr(default)
+    return json_args
 
 class log2mongo(object):
     """

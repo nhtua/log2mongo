@@ -27,8 +27,8 @@ class TestDecorator01(unittest.TestCase):
             "timestamp": log.asctime,
             "input": {
                 "method": func.__name__,
-                "args": args,
-                "kwargs": kwargs
+                "args": args_as_String,
+                "kwargs": kwargs_as_String
             },
             "output": {
                 "log_name" : log.name,
