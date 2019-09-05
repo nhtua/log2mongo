@@ -5,7 +5,7 @@ Environment:
 - Pipenv
 - Pytest
 
-See the `pytest` to know how to use @log2mongo
+See the `tests` directory to know how to use @log2mongo
 ```bash
 pipenv run pytest
 ```
