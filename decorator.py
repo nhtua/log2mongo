@@ -1,4 +1,5 @@
 from mongo import db
+from config import MONGO_COLLECTION
 from testfixtures import LogCapture
 
 
@@ -23,7 +24,7 @@ def log2mongo(func):
                     "message"  : log.message
                 }
             }
-            db.auto_logs.insert_one(data)
+            db[MONGO_COLLECTION].insert_one(data)
         print(f'>>> End pushing to MongoDB')
         return returned_value
 
