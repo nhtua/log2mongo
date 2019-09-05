@@ -21,6 +21,23 @@ class TestDecorator01(unittest.TestCase):
         assert EXP == OUT, 'Decorator log2mongo should return exactly the original function'
 
     def test_log2mongo_in_db(self):
+        """
+        Make sure log in right format
+         data = {
+            "timestamp": log.asctime,
+            "input": {
+                "method": func.__name__,
+                "args": args,
+                "kwargs": kwargs
+            },
+            "output": {
+                "log_name" : log.name,
+                "log_level": log.levelname,
+                "pathname" : log.pathname,
+                "message"  : log.message
+            }
+        }
+        """
         logger = get_logger('DATA_IN_MONGO', logging.DEBUG)
         @log2mongo
         def testee(abc):
@@ -38,7 +55,6 @@ class TestDecorator01(unittest.TestCase):
         assert log['input']['method']     == 'testee', 'log2mongo should keep right running method name'
         assert log['input']['args']       == ['some message!'], 'log2mongo should keep the right input args'
         assert log['input']['kwargs']     == {} , 'log2mongo should keep the right input kwargs'
-        assert log['input']['method']     == 'testee', 'log2mongo should keep the right running method name'
 
 if __name__ == '__main__':
     unittest.main()
