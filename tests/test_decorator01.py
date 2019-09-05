@@ -1,7 +1,16 @@
 import unittest
+import logging
+
+from config import MONGO_COLLECTION
 from decorator import log2mongo
+from mongo import db
+from logger import get_logger
+
 
 class TestDecorator01(unittest.TestCase):
+    def setUp(self):
+        db[MONGO_COLLECTION].delete_many({})
+
     def test_log2mongo_returned_value(self):
         def testee(abc):
             return abc
@@ -11,7 +20,25 @@ class TestDecorator01(unittest.TestCase):
         OUT = log2mongo(testee)(INP)
         assert EXP == OUT, 'Decorator log2mongo should return exactly the original function'
 
-
+    def test_log2mongo_in_db(self):
+        logger = get_logger('DATA_IN_MONGO', logging.DEBUG)
+        @log2mongo
+        def testee(abc):
+            logger.info(abc)
+        testee('some message!')
+        log = db[MONGO_COLLECTION].find_one({"input.method":"testee"})
+        assert log              , 'There should be a log in Mongo'
+        assert log['timestamp'] , 'Log should have timestamp'
+        assert log['input']     , 'Log should have input data'
+        assert log['output']    , 'Log should have output data'
+        assert log['output']['log_name']  == 'DATA_IN_MONGO', 'log2mongo should keep the right Log Name'
+        assert log['output']['log_level'] == 'INFO', 'log2mongo should keep the right Log level'
+        assert log['output']['pathname']  == __file__, 'log2mongo should keep the right path of running file'
+        assert log['output']['message']   == 'some message!', 'log2mongo should keep the right Log message'
+        assert log['input']['method']     == 'testee', 'log2mongo should keep right running method name'
+        assert log['input']['args']       == ['some message!'], 'log2mongo should keep the right input args'
+        assert log['input']['kwargs']     == {} , 'log2mongo should keep the right input kwargs'
+        assert log['input']['method']     == 'testee', 'log2mongo should keep the right running method name'
 
 if __name__ == '__main__':
     unittest.main()
