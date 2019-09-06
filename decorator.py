@@ -6,12 +6,12 @@ from mongo import db
 from config import MONGO_COLLECTION
 
 
-def convert_json(obj, default: 'Anything can repr to string'):
+def obj_to_text(obj, default: 'Anything can repr to string'):
     try:
-        json_args = repr(obj)
+        text = repr(obj)
     except TypeError as e:
-        json_args = repr(default)
-    return json_args
+        text = repr(default)
+    return text
 
 class log2mongo(object):
     """
@@ -37,8 +37,8 @@ class log2mongo(object):
                 "timestamp": log.asctime,
                 "input": {
                     "method": self.func.__name__,
-                    "args": convert_json(args, default=[]),
-                    "kwargs": convert_json(kwargs, default={})
+                    "args": obj_to_text(args, default=[]),
+                    "kwargs": obj_to_text(kwargs, default={})
                 },
                 "output": {
                     "log_name" : log.name,
