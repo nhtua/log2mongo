@@ -8,12 +8,12 @@ from logger import get_logger
 
 
 class MyTesteeClass(object):
-    @log2mongo
+    @log2mongo()
     def some_func(self):
         logger = get_logger('MY_TESTEE', logging.DEBUG)
         logger.info('what ever message')
 
-    @log2mongo
+    @log2mongo()
     def func_with_params(self, name, age=18):
         logger = get_logger('MY_TESTEE', logging.DEBUG)
         logger.info(f"I'm {name}. I'm {age} years old")

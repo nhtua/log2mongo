@@ -17,7 +17,7 @@ class TestDecorator01(unittest.TestCase):
 
         INP = 'something'
         EXP = testee(INP)
-        OUT = log2mongo(testee)(INP)
+        OUT = log2mongo()(testee)(INP)
         assert EXP == OUT, 'Decorator log2mongo should return exactly the original function'
 
     def test_log2mongo_in_db(self):
@@ -39,7 +39,7 @@ class TestDecorator01(unittest.TestCase):
         }
         """
         logger = get_logger('DATA_IN_MONGO', logging.DEBUG)
-        @log2mongo
+        @log2mongo()
         def testee(abc):
             logger.info(abc)
         testee('some message!')
