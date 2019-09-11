@@ -9,6 +9,7 @@ testfixtures = "*"
 
 [packages]
 pymongo = "*"
+invoke = "*"
 
 [requires]
 python_version = "3.6"
