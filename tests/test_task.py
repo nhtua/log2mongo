@@ -1,6 +1,8 @@
 from invoke import Context
 import unittest
 
+from testfixtures import LogCapture
+
 import tasks
 
 class TestTasks(unittest.TestCase):

@@ -1,4 +1,4 @@
-from functools import update_wrapper, partial
+from functools import update_wrapper, partial, wraps
 from testfixtures import LogCapture
 import json
 
@@ -55,11 +55,11 @@ def log2mongo(collection_name=MONGO_COLLECTION):
 
 
 def invoke2mongo(func):
+    @wraps(func)
     def wrapper(context, *args, **kwargs):
         with LogCapture() as root_log:
             returned_value = func(context, *args, **kwargs)
         # log something here to MongoDB
-        print(f'>>> Start pushing to MongoDB')
         for log in root_log.records:
             data = {
                 "timestamp": log.asctime,
@@ -76,7 +76,14 @@ def invoke2mongo(func):
                 }
             }
             db[MONGO_COLLECTION].insert_one(data)
-        print(f'>>> End pushing to MongoDB')
         return returned_value
 
     return wrapper
+
+
+def simple_deco(func):
+    @wraps(func)
+    def inner(*args, **kwargs):
+        print('where am I? inner')
+        return func(*args, **kwargs)
+    return inner
