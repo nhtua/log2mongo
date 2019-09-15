@@ -30,7 +30,10 @@ class GCTask(Task):
         for param in sig.parameters:
             arg = sig.parameters[param]
             arg_names.append(param)
-            spec_dict[param] = NO_DEFAULT if arg.default == inspect._empty else arg.default
+            if arg.default == inspect.Signature.empty:
+                spec_dict[param] = NO_DEFAULT
+            else:
+                spec_dict[param] = arg.default
         try:
             context_arg = arg_names.pop(0)
         except IndexError:
