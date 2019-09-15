@@ -1,6 +1,7 @@
+import sys
 from functools import update_wrapper, partial, wraps
 from testfixtures import LogCapture
-import contextlib
+from io import StringIO
 
 from mongo import db
 from config import MONGO_COLLECTION
@@ -89,16 +90,12 @@ def simple_deco(func):
     return inner
 
 
-@contextlib.contextmanager
-def capture():
-    import sys
-    from io import StringIO
-    oldout,olderr = sys.stdout, sys.stderr
-    try:
-        out=[StringIO(), StringIO()]
-        sys.stdout,sys.stderr = out
-        yield out
-    finally:
-        sys.stdout,sys.stderr = oldout, olderr
-        out[0] = out[0].getvalue()
-        out[1] = out[1].getvalue()
+class CaptureStdout(list):
+    def __enter__(self):
+        self._stdout = sys.stdout
+        sys.stdout = self._stringio = StringIO()
+        return self
+    def __exit__(self, *args):
+        self.extend(self._stringio.getvalue().splitlines())
+        del self._stringio    # free up some memory
+        sys.stdout = self._stdout

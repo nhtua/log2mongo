@@ -1,4 +1,4 @@
-
+import sys
 import logging
 
 
@@ -7,7 +7,7 @@ def get_logger(name, level=logging.WARNING):
     logger.setLevel(level)
 
     # Create handlers
-    c_handler = logging.StreamHandler()
+    c_handler = logging.StreamHandler(stream=sys.stdout)
     f_handler = logging.FileHandler('file.log')
 
     # Create formatters and add it to handlers

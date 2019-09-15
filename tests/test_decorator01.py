@@ -1,8 +1,10 @@
 import unittest
 import logging
+import io
+from contextlib import redirect_stdout
 
 from config import MONGO_COLLECTION
-from decorator import log2mongo, capture
+from decorator import log2mongo, CaptureStdout
 from mongo import db
 from logger import get_logger
 
@@ -58,11 +60,25 @@ class TestDecorator01(unittest.TestCase):
 
     def test_pure_capture(self):
         def lab_mouse(abc):
-            logger = get_logger('PURE_CAPTURE')
-            print(abc)
-        with capture() as out:
+            logger = get_logger('PURE CAPTURE', level=logging.DEBUG)
+            logger.info(f'hello, {abc}')
+        with CaptureStdout() as out:
             lab_mouse('some log')
-        assert 'some log' in out[0]
+        assert 'some log' in out
+
+    def test_redirect_stdout(self):
+        """
+        THIS IS THE BEST WAY TO CAPTURE ALL LOG OUTPUT
+        """
+        def lab_mouse(abc):
+            logger = get_logger('REDIRECT_STDOUT', level=logging.DEBUG)
+            logger.info(f'hello, {abc}')
+
+        f = io.StringIO()
+        with redirect_stdout(f):
+            lab_mouse('im here')
+        out = f.getvalue()
+        assert 'im here' in out
 
 if __name__ == '__main__':
     unittest.main()
