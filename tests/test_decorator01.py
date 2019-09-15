@@ -2,7 +2,7 @@ import unittest
 import logging
 
 from config import MONGO_COLLECTION
-from decorator import log2mongo
+from decorator import log2mongo, capture
 from mongo import db
 from logger import get_logger
 
@@ -55,6 +55,14 @@ class TestDecorator01(unittest.TestCase):
         assert log['input']['method']     == 'testee', 'log2mongo should keep right running method name'
         assert log['input']['args']       == repr(('some message!',)), 'log2mongo should keep the right input args'
         assert log['input']['kwargs']     == repr({}) , 'log2mongo should keep the right input kwargs'
+
+    def test_pure_capture(self):
+        def lab_mouse(abc):
+            logger = get_logger('PURE_CAPTURE')
+            print(abc)
+        with capture() as out:
+            lab_mouse('some log')
+        assert 'some log' in out[0]
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,6 +1,6 @@
 from functools import update_wrapper, partial, wraps
 from testfixtures import LogCapture
-import json
+import contextlib
 
 from mongo import db
 from config import MONGO_COLLECTION
@@ -87,3 +87,18 @@ def simple_deco(func):
         print('where am I? inner')
         return func(*args, **kwargs)
     return inner
+
+
+@contextlib.contextmanager
+def capture():
+    import sys
+    from io import StringIO
+    oldout,olderr = sys.stdout, sys.stderr
+    try:
+        out=[StringIO(), StringIO()]
+        sys.stdout,sys.stderr = out
+        yield out
+    finally:
+        sys.stdout,sys.stderr = oldout, olderr
+        out[0] = out[0].getvalue()
+        out[1] = out[1].getvalue()
