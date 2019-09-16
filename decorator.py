@@ -91,11 +91,17 @@ def simple_deco(func):
 
 
 class CaptureStdout(list):
+    def __init__(self):
+        self._stdout = None
+        self._string_io = None
+
     def __enter__(self):
-        self._stdout = sys.stdout
-        sys.stdout = self._stringio = StringIO()
+        self._stdout = sys.__stdout__
+        sys.__stdout__ = self._string_io = StringIO()
         return self
-    def __exit__(self, *args):
-        self.extend(self._stringio.getvalue().splitlines())
-        del self._stringio    # free up some memory
-        sys.stdout = self._stdout
+
+    def __exit__(self, type, value, traceback):
+        sys.__stdout__ = self._stdout
+
+    def __str__(self):
+        return self._string_io.getvalue()

@@ -1,3 +1,4 @@
+import sys
 import unittest
 import logging
 import io
@@ -59,19 +60,19 @@ class TestDecorator01(unittest.TestCase):
         assert log['input']['kwargs']     == repr({}) , 'log2mongo should keep the right input kwargs'
 
     def test_pure_capture(self):
+        logger = get_logger('PURE CAPTURE', level=logging.DEBUG)
         def lab_mouse(abc):
-            logger = get_logger('PURE CAPTURE', level=logging.DEBUG)
             logger.info(f'hello, {abc}')
         with CaptureStdout() as out:
             lab_mouse('some log')
-        assert 'some log' in out
+        assert 'some log' in str(out)
 
     def test_redirect_stdout(self):
         """
         THIS IS THE BEST WAY TO CAPTURE ALL LOG OUTPUT
         """
+        logger = get_logger('REDIRECT_STDOUT', level=logging.DEBUG)
         def lab_mouse(abc):
-            logger = get_logger('REDIRECT_STDOUT', level=logging.DEBUG)
             logger.info(f'hello, {abc}')
 
         f = io.StringIO()
@@ -79,6 +80,16 @@ class TestDecorator01(unittest.TestCase):
             lab_mouse('im here')
         out = f.getvalue()
         assert 'im here' in out
+
+    def test_stdout(self):
+        def lab_mouse(abc):
+            logger = get_logger('TEST STDOUT', level=logging.DEBUG)
+            logger.info(f'hello, {abc}')
+            print('cheese')
+
+        lab_mouse('cheese')
+        mytext = sys.__stdout__.fileno()
+        assert 'cheese' in mytext
 
 if __name__ == '__main__':
     unittest.main()

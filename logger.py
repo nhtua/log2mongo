@@ -7,7 +7,7 @@ def get_logger(name, level=logging.WARNING):
     logger.setLevel(level)
 
     # Create handlers
-    c_handler = logging.StreamHandler(stream=sys.stdout)
+    c_handler = logging.StreamHandler(stream=sys.__stdout__)
     f_handler = logging.FileHandler('file.log')
 
     # Create formatters and add it to handlers
