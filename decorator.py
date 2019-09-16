@@ -96,12 +96,12 @@ class CaptureStdout(list):
         self._string_io = None
 
     def __enter__(self):
-        self._stdout = sys.__stdout__
-        sys.__stdout__ = self._string_io = StringIO()
+        self._stdout = sys.stdout
+        sys.stdout = self._string_io = StringIO()
         return self
 
     def __exit__(self, type, value, traceback):
-        sys.__stdout__ = self._stdout
+        sys.stdout = self._stdout
 
     def __str__(self):
         return self._string_io.getvalue()
